@@ -1,0 +1,26 @@
+The essence of SMO is to search alpha within its feasible area, and then find w, b, xi, beta constructively.
+
+original KKT conditions:
+1. primal feasibility: g_i(x*) <= 0, h_i(x*) = 0, for i = 1, ..., m
+2. dual feasibility: alpha_i* >= 0, for i = 1, ..., m
+3. complementary slackness: alpha_i* g_i(x*) = 0, for i = 1, ..., m
+4. Lagrangian stationarity: the derivitive of Lagrangian on x* is zero
+
+optimal conditions in SMO:
+i.	alpha_i = 0		->	y[i](w.T @ X[i] + b) >= 1
+ii.	0 < alpha_i < C	->	y[i](w.T @ X[i] + b) = 1
+iii.	alpha_i = C	-> 	y[i](w.T @ X[i] + b) <= 1
+
+The key of the correctness of SMO relies on the fact that when seaching alpha within its feasible area, once we find alpha s.t. optimal conditions are satisfied, we can construct a set of w, b, xi, beta which satisfy the original KKT conditions.
+
+The way to construct w and beta is trivial and unique, which only relies on alpha according to constraints gained when taking derivitive of Lagrangian. Thus KKT condition 2, 4 will be automatically followed owing to the way we construct beta and w and the constraints we have when searching for alpha.
+
+So all we need to prove is that the KKT condition 1 and 3 will be satisfied when optimal conditions are satisfied.
+
+Suppose we have found whichever number as b.
+As for xi,
+In case (i), we set xi as zero, since alpha is also zero then 3 is satisfied, regardless the value of b. So is 1.
+In case (ii), we set xi as zero, since y[i](w.T @ X[i] + b) exactly equals 1, then 1 - xi_i - y[i](w.T @ X[i] + b) is zero, condition 3 satisfied. And y[i](w.T @ X[i] + b) >= 1 - xi_i = 1, thus condition 1 satisfied
+In case (iii), since beta_i is zero, xi can be any value satisfying 1 - xi_i - y[i](w.T @ X[i] + b) = 0, condition 3 satisfied. Condition 1 also satisfied since y[i](w.T @ X[i] + b) >= 1 - xi_i.
+
+To sum up, KKT conditions will be satisfied when optimal conditions in SMO are satisfied. Therefore by keep searching for alpha which satisfies optimal conditions, we will find the optimal solution of the primal problem. Moreover, SMO can also be proved to converge (see Osuna's paper). These altogether ensured the correctness of SMO.
