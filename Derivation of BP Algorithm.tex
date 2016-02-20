@@ -1,0 +1,84 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\title{Derivation of BP Algorithm}
+\author{Lifu Huang}
+\date{Feb. 2016}
+\begin{document}
+	\maketitle
+	\section{Derivation}
+	\subsection{Cost function}
+	\begin{equation}
+		\begin{aligned}
+			J(W, b) &= \frac{1}{m} \sum_{i=1}^{m} J(W, b; x, y)\\
+			J(W, b; x, y) &= \frac{1}{2} ||h_{W,b}(x) - y||^2\\
+		\end {aligned}
+	\end{equation}
+	\subsection{Computation of $\delta$}
+	\begin{equation}
+		\begin{aligned}
+			\delta_i^{(n_l)} &= \frac{\partial}{\partial z_i^{(n_l)}} J(W, b; x, y) \\
+			&= \frac{\partial}{\partial z_i^{(n_l)}} \frac{1}{2} ||h_{W,b}(x) - y||^2\\
+			&= \frac{\partial}{\partial z_i^{(n_l)}} \frac{1}{2} \sum_{j=1}^{s_{n_l}} (f(z_j^{(n_l)}) - y_j)^2 \\
+			&= (f(z_i^{(n_l)}) - y_i) f'(z_i^{(n_l)}) \\
+			&= -f'(z_i^{(n_l)}) (y_i - f(z_i^{(n_l)})) \\
+		\end{aligned}
+	\end{equation}
+	\begin{equation}
+		\begin{aligned}
+			\delta^{(n_l)} &= - (y - a^{(n_l)}) \bullet f'(z^{(n_l)}) 
+		\end{aligned}
+	\end{equation}
+
+	\begin{equation}
+		\begin{aligned}
+			\delta_i^{(l)} &= \frac{\partial}{\partial z_i^{(l)}} J(W, b; x, y) \\	
+			&= \sum_{j=1}^{s_{l+1}} \frac{\partial}{\partial z_j^{(l+1)}} J(W, b; x, y) \frac{\partial z_j^{(l+1)}}{\partial z_i^{(l)}} \\
+			&= \sum_{j=1}^{s_{l+1}} \delta_j^{(l+1)} 
+			\frac{\partial}{\partial z_i^{(l)}} \sum_{k=1}^{s_{l}}(W_{jk}^{(l)}f(z_k^{(l)})) \\
+			&= \sum_{j=1}^{s_{l+1}} \delta_j^{(l+1)} W_{ji}^{(l)} f'(z_i^{(l)}) \\
+			&= f'(z_i^{(l)})(\sum_{j=1}^{s_{l+1}} \delta_j^{(l+1)} W_{ji}^{(l)}) \\
+		\end{aligned}
+	\end{equation}
+	\begin{equation}
+		\begin{aligned}
+			\delta^{(l)} &= ((W^{(l)})^T \delta^{(l+1)}) \bullet f'(z^{(l)}) 
+		\end{aligned}
+	\end{equation}
+	\subsection{Derivative wrt W}
+	\begin{equation}
+		\begin{aligned}
+			\frac{\partial}{\partial W_{ij}^{(l)}} J(W, b; x, y) &= \sum_{k=1}^{s_{l+1}} \frac{\partial}{\partial z_k^{(l+1)}}J(W, b; x, y) \frac{\partial z_k^{(l+1)}}{\partial  W_{ij}^{(l)}} \\
+			&= \delta_i^{(l+1)} a_j^{(l)}
+		\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+		\begin{aligned}
+			\nabla_{W^{(l)}} J(W, b; x, y) &= \delta^{(l+1)}(a^{(l)})^T \\
+		\end{aligned}
+	\end{equation}
+	\subsection{Derivative wrt b}
+	\begin{equation}
+		\begin{aligned}
+			\frac{\partial}{\partial b_{i}^{(l)}} J(W, b; x, y) &=  \sum_{k=1}^{s_{l+1}} \frac{\partial}{\partial z_k^{(l+1)}}J(W, b; x, y) \frac{\partial z_k^{(l+1)}}{\partial  b_{i}^{(l)}} \\
+			&= \delta_i^{(l+1)} 
+		\end{aligned}
+	\end{equation}
+		
+	\begin{equation}
+		\begin{aligned}
+			\nabla_{b^{(l)}} J(W, b; x, y) &= \delta^{(l+1)} 
+		\end{aligned}
+	\end{equation}
+	
+	\section{Conclusion}
+	\begin{align}
+		\delta^{(n_l)} &= - (y - a^{(n_l)}) \bullet f'(z^{(n_l)}) \\
+		\delta^{(l)} &= ((W^{(l)})^T \delta^{(l+1)}) \bullet f'(z^{(l)}) \\
+		\nabla_{W^{(l)}} J(W, b; x, y) &= \delta^{(l+1)}(a^{(l)})^T \\
+		\nabla_{b^{(l)}} J(W, b; x, y) &= \delta^{(l+1)} 
+	\end{align}
+\end{document}
