@@ -9,7 +9,7 @@
 \begin{document}
 	\maketitle
 	\section{CBOW Model}
-	Assume that the index of the real center word in the input is $w_O$, then our objective is:
+	Given a word windows of length $C+1$, assume that the index of the the center word in the window is $w_O$, the context words are $w_1, w_2, .., w_C$.
 	\subsection{Loss Function}
 	\begin{equation}
 		\begin{aligned}
@@ -82,6 +82,7 @@
 		\end{aligned}
 	\end{equation}
 	\section{Skip-Gram Model}
+	Given a word windows of length $C+1$, assume that the index of the the center word in the window is $w_I$, the context words are $w_1, w_2, .., w_C$.
 	\subsection{Loss Function}
 	\begin{equation}
 		\begin{aligned}
