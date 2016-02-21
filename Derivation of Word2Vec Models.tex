@@ -1,0 +1,158 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\title{Derivation of Word2Vec Models}
+\author{Lifu Huang}
+\date{Feb. 2016}
+\begin{document}
+	\maketitle
+	\section{CBOW Model}
+	Assume that the index of the real center word in the input is $w_c$, then our objective is:
+	\subsection{Loss Function}
+	\begin{equation}
+		\begin{aligned}
+			E &=-\log  p(w_{O}|w_{1}, w_{2}, .., w_{C})\\ 
+			&=-\log  \left( \frac { e^{ u_{w_{O}} } }{ \sum _{ k=1 }^{ V } e^{ u_{ k } } }  \right) \\ 
+			&=-u_{w_{O}}+\log { \sum _{ k=1 }^{ V } e^{ u_{ k } } } 
+		\end{aligned}
+	\end{equation}
+	\subsection{Updating W'}
+	\begin{equation}
+		\begin{aligned}
+			\delta'_i &= \frac{\partial E}{\partial u_{i}} \\
+			&= -t_i + \frac{e^{u_i}}{\sum_{k=1}^{V}e^{u_{k}}} \\
+			&= y_i - t_i \\
+		\end{aligned}
+	\end{equation}
+
+	\begin{equation}
+		\begin{aligned}
+			\delta' = \nabla_u E = y - t \\		
+		\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+		\begin{aligned}
+			\frac{\partial E}{\partial W'_{ij}} &= \sum_{k=1}^{V} \left( \frac{\partial E}{\partial u_k} \cdot \frac{\partial u_k}{\partial W'_{ij}} \right) \\
+			&= \sum_{k=1}^{V} \left(\delta'_k \cdot \frac{\partial u_k}{\partial W'_{ij}}\right)  \\
+			&= \delta'_k \cdot h_j \\
+		\end{aligned}
+	\end{equation}	
+
+	\begin{equation}
+		\begin{aligned}	
+			\nabla_{W'} E &= \delta' \cdot h^T
+		\end{aligned}
+	\end{equation}
+	
+	\subsection{Updating W}
+	\begin{equation}
+		\begin{aligned}
+			\delta_i &= \frac{\partial E}{\partial h_i} \\
+			&= \sum_{j=1}^{V} \frac{\partial E}{\partial u_j} \cdot \frac{\partial u_j}{\partial h_i} \\
+			&= \sum_{j=1}^{V} \delta'_j \cdot W'_{ji} 
+		\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+		\begin{aligned}
+			\delta &= (W')^T \cdot \delta'
+		\end{aligned}
+	\end{equation}
+	
+	
+	\begin{equation}
+		\begin{aligned}
+			\frac{\partial E}{W_{ij}} &= \sum_{k=1}^{N} \frac{\partial E}{h_k} \cdot \frac{\partial h_k}{\partial W_{ij}} \\
+			&= \sum_{k=1}^{N} \delta_k \cdot \frac{\partial}{\partial W_{ij}} \left(\frac{1}{C} \sum_{c=1}^{C} W_{k\cdot} \cdot x_{w_{c}} \right)\\
+			&= \frac{1}{C} \cdot \delta_i \cdot \sum_{c=1}^{C} x_{w_{c}, j}
+		\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+		\begin{aligned}
+			\nabla_W E &= \frac{1}{C} \cdot \delta \cdot \left(\sum_{c=1}^{C} x_{w_{c}}\right)^T \\
+		\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+		\begin{aligned}
+		\end{aligned}
+	\end{equation}
+	\section{Skip-Gram Model}
+	\subsection{Loss Function}
+	\begin{equation}
+		\begin{aligned}
+			E &=-\log p(w_{1}, w_{2}, .., w_{C}|w_{I})\\ 
+			&= -\log \prod_{c=1}^{C} p(w_{c}|w_{I}) \\
+			&= -\sum_{c=1}^{C} \log p(w_{c}|w_{I}) \\ 
+			&= -\sum_{c=1}^{C} \log \frac{e^{u_{c,w_c}}}{\sum_{k=1}^{V}e^{u_{ck}}} \\ 
+		\end{aligned}
+	\end{equation}
+	
+	\subsection{Update W'}
+	\begin{equation}
+		\begin{aligned}
+			\delta'_{c, i} &= \frac{\partial E}{\partial u_{ci}} \\
+			&= \frac{\partial}{\partial u_{ci}} \left(
+			-\sum_{c=1}^{C} \log \frac{e^{u_{c,w_c}}}{\sum_{k=1}^{V}e^{u_{ck}}} \right) \\
+			&= -t_{ci} + \frac{e^{u_{ci}}}{\sum_{k=1}^{V}e^{u_{ck}}} \\
+			&= y_{ci} - t_{ci}
+		\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+		\begin{aligned}
+			\delta'_{c} &= y_{c} - t_{c} 
+		\end{aligned}
+	\end{equation}
+
+	\begin{equation}
+		\begin{aligned}
+			\frac{\partial E}{\partial W'_{ij}} &= \sum_{c=1}^{C} \sum_{k=1}^{V} \frac{\partial E}{\partial u_{ck}} \cdot \frac{\partial u_{ck}}{\partial W'_{ij}} \\
+			&= \sum_{c=1}^{C} \sum_{k=1}^{V} \delta'_{ci} \cdot \frac{\partial}{\partial W'_{ij}}\sum_{l=1}^{N} W'_{kl} \cdot h_l \\
+			&= \left(\sum_{c=1}^{C} \delta'_{ci} \right)\cdot h_j \\
+			&= \gamma_i \cdot h_j
+		\end{aligned}	
+	\end{equation}
+	
+	\begin{equation}
+		\begin{aligned}
+			\nabla_{W'} E &= \gamma \cdot h^T
+		\end{aligned}	
+	\end{equation}
+	
+	\subsection{Update W}
+	\begin{equation}
+		\begin{aligned}
+			\delta_i &= \frac{\partial E}{\partial h_i} \\
+			&= \sum_{c=1}^{C}\sum_{j=1}^{V} \left( \frac{\partial E}{u_{cj}} \cdot \frac{\partial u_{cj}}{\partial h_i}\right)  \\
+			&= \sum_{c=1}^{C}\sum_{j=1}^{V}\left( \delta'_{cj}\cdot W'_{j,i} \right)   \\
+			&= \sum_{j=1}^{V} W'_{ji} \cdot \left(\sum_{c=1}^{C} \delta'_{cj} \right) \\
+			&= \sum_{j=1}^{V} W'_{ji} \cdot \gamma_j
+		\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+		\begin{aligned}
+			\delta = (W')^T \cdot \gamma
+		\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+		\begin{aligned}
+			\frac{\partial E}{\partial W_{ij}} &= \sum_{k=1}^{N} \left( \frac{\partial E}{\partial h_k} \cdot \frac{\partial h_k}{\partial W_{ij}}\right) \\
+			&= \sum_{k=1}^{N} \left( \delta_k \cdot \frac{\partial h_k}{W_{ij}}\right) \\
+			&= \delta_i \cdot x_{w_I,j} \\
+		\end{aligned}
+	\end{equation}
+	
+	
+	\begin{equation}
+		\begin{aligned}
+			\nabla_W E = \delta \cdot x_{w_I}^T
+		\end{aligned}
+	\end{equation}
+\end{document}
