@@ -93,10 +93,10 @@
 		\end{aligned}
 	\end{equation}
 	
-	\subsection{Update W'}
+	\subsection{Updating W'}
 	\begin{equation}
 		\begin{aligned}
-			\delta'_{c, i} &= \frac{\partial E}{\partial u_{ci}} \\
+			\delta'_{ci} &= \frac{\partial E}{\partial u_{ci}} \\
 			&= \frac{\partial}{\partial u_{ci}} \left(
 			-\sum_{c=1}^{C} \log \frac{e^{u_{c,w_c}}}{\sum_{k=1}^{V}e^{u_{ck}}} \right) \\
 			&= -t_{ci} + \frac{e^{u_{ci}}}{\sum_{k=1}^{V}e^{u_{ck}}} \\
@@ -125,7 +125,7 @@
 		\end{aligned}	
 	\end{equation}
 	
-	\subsection{Update W}
+	\subsection{Updating W}
 	\begin{equation}
 		\begin{aligned}
 			\delta_i &= \frac{\partial E}{\partial h_i} \\
@@ -154,6 +154,37 @@
 	\begin{equation}
 		\begin{aligned}
 			\nabla_W E = \delta \cdot x_{w_I}^T
+		\end{aligned}
+	\end{equation}
+	\section{Negative Sampling}
+	
+The derivation for negative sampling is almost the same as before, except that we changed our objective function to its  approximated version for better performance. As a result, all we need is to recalculate $\delta'$, which can then be plugged back into other formula in CBOW or Skip-Gram model without need to change anything else. 
+	\subsection {Loss Function for CBOW} 
+	\begin{equation}
+		\begin{aligned}
+			E &= -\log \sigma(u_{c,w_c}) - \sum_{k=1}^{K} \log \sigma (-u_{c,w_k}) 
+		\end{aligned}
+	\end{equation}
+
+	\subsection {Loss function for Skip-Gram} 
+	\begin{equation}
+		\begin{aligned}
+		E &= \sum_{c=1}^{C} \left( -\log \sigma(u_{c,w_c}) - \sum_{k=1}^{K} \log \sigma (-u_{c,w_k})  \right)
+		\end{aligned}
+	\end{equation}
+	
+	\subsection{Computation for $\delta'$}
+	It is not difficult to find that, for both CBOW and Skip-Gram,
+	\begin{equation}
+		\begin{aligned}
+		\delta'_{ci} &= \frac{\partial E}{\partial u_{ci}} \\
+		&= \sigma(u_{ci}) - t_{ci} \\
+		\end{aligned}
+	\end{equation}
+	Thus,
+	\begin{equation}
+		\begin{aligned}
+		\delta'_{c} &= \sigma(u_{c}) - t_{c} \\
 		\end{aligned}
 	\end{equation}
 \end{document}
