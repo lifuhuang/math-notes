@@ -2,6 +2,7 @@
 
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{framed}
 
 \title{Derivation of Word2Vec Models}
 \author{Lifu Huang}
@@ -47,6 +48,15 @@
 		\end{aligned}
 	\end{equation}
 	
+	\subsubsection*{Updating Rules}
+	\begin{framed}
+	\begin{equation}
+		\begin{aligned}
+			v'_{i, new} &= v'_{i, old} - \eta \cdot \delta'_i \cdot h &\mbox{for i = 1, 2, .., V}\\
+		\end{aligned}
+	\end{equation}
+	\end{framed}
+	
 	\subsection{Updating W}
 	\begin{equation}
 		\begin{aligned}
@@ -62,7 +72,6 @@
 		\end{aligned}
 	\end{equation}
 	
-	
 	\begin{equation}
 		\begin{aligned}
 			\frac{\partial E}{W_{ij}} &= \sum_{k=1}^{N} \frac{\partial E}{h_k} \cdot \frac{\partial h_k}{\partial W_{ij}} \\
@@ -77,10 +86,16 @@
 		\end{aligned}
 	\end{equation}
 	
+	\subsubsection*{Updating Rules}
+	\begin{framed}
 	\begin{equation}
 		\begin{aligned}
+			v_{w_i, new} &= v_{w_i, old} - \eta \cdot \frac{1}{C} \cdot \delta &\mbox{for i = 1, 2, .., C}
 		\end{aligned}
 	\end{equation}
+	\end{framed}
+	
+	\newpage
 	\section{Skip-Gram Model}
 	Given a word windows of length $C+1$, assume that the index of the the center word in the window is $w_I$, the context words are $w_1, w_2, .., w_C$.
 	\subsection{Loss Function}
@@ -125,6 +140,15 @@
 		\end{aligned}	
 	\end{equation}
 	
+	\subsubsection*{Updating Rules}
+	\begin{framed}
+	\begin{equation}
+		\begin{aligned}
+			v'_{i, new} &= v'_{i, old} - \eta \cdot \gamma_i \cdot h &\mbox{for i = 1, 2, .., V}
+		\end{aligned}
+	\end{equation}
+	\end{framed}
+	
 	\subsection{Updating W}
 	\begin{equation}
 		\begin{aligned}
@@ -156,45 +180,114 @@
 			\nabla_W E = \delta \cdot x_{w_I}^T
 		\end{aligned}
 	\end{equation}
+	
+	\subsubsection*{Updating Rules}
+	\begin{framed}
+	\begin{equation}
+		\begin{aligned}
+			v_{w_I, new} &= v_{w_I, old} - \eta \cdot \delta
+		\end{aligned}
+	\end{equation}
+	\end{framed}
+	
+	\newpage
 	\section{Negative Sampling}
 	
-The derivation for negative sampling is almost the same as before, except that we changed our objective function to its  approximated version for better performance. As a result, all we need is to recalculate $\delta'$, which can then be plugged back into other formula in CBOW or Skip-Gram model without need to change anything else. 
+The derivation for negative sampling is almost the same as before, except that we changed our objective function to its  approximated version for better performance. As a result, all we need is to recalculate $\delta'$, which can then be plugged back into formula in CBOW or Skip-Gram model we derived before.
 	\subsection {CBOW} 
 	\begin{equation}
 		\begin{aligned}
-			E &= -\log \sigma(u_{w_O}) - \sum_{k=1}^{K} \log \sigma (-u_{w_k}) 
+			E &= -\log \sigma(u_{w_O}) - \sum_{k \sim P_n(w)} \log \sigma (-u_{k}) 
 		\end{aligned}
 	\end{equation}
 	\begin{equation}
 		\begin{aligned}
 			\delta'_{i} &= \frac{\partial E}{\partial u_{i}} \\
-			&= \sigma(u_{i}) - t_{i} \\
+			&= 
+			\begin{cases}
+				\sigma(u_{i}) - t_{i} &\mbox{for $i \in \{w_O\} \cup \{k \sim P_n(w) \}$}\\
+				0  &\mbox{Otherwise}
+			\end{cases}
+		\end{aligned}
+	\end{equation}
+	
+	\subsubsection*{Complete Updating Rules}
+
+	\begin{framed}
+	\centering
+	Let $S = \{w_O\} \cup \{k \sim P_n(w) \}$,
+	\begin{equation}
+		\begin{aligned}
+			\delta'_{i} &= \frac{\partial E}{\partial u_{i}} = \sigma(u_{i}) - t_{i} &\mbox{for $i \in S$}
 		\end{aligned}
 	\end{equation}
 		
 	\begin{equation}
 		\begin{aligned}
-			\delta' &= \sigma(u) - t \\
-		\end{aligned}	
+			v'_{i, new} &= v'_{i, old} - \eta \cdot \delta'_i \cdot h  &\mbox{for $i \in S$}\\
+		\end{aligned}
 	\end{equation}
 	
-	\subsection {Skip-Gram} 
 	\begin{equation}
 		\begin{aligned}
-		E &= \sum_{c=1}^{C} \left( -\log \sigma(u_{c,w_c}) - \sum_{k=1}^{K} \log \sigma (-u_{c,w_k})  \right)
+		\delta &= \sum_{i \in S} \delta'_{i} \cdot v'_{i}
+		\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+		\begin{aligned}
+			v_{w_i, new} &= v_{w_i, old} - \eta \cdot \frac{1}{C} \cdot \delta &\mbox{for i = 1, 2, .., C}
+		\end{aligned}
+	\end{equation}
+			
+	\end{framed}
+	
+	\subsection {Skip-Gram} 
+
+	\begin{equation}
+		\begin{aligned}
+			E &= \sum_{c=1}^{C} \left( -\log \sigma(u_{c,w_c}) -  \sum_{k \sim P_n(w)} \log \sigma (-u_{c,k})  \right)
 		\end{aligned}
 	\end{equation}
 	
 	\begin{equation}
 		\begin{aligned}
 			\delta'_{ci} &= \frac{\partial E}{\partial u_{ci}} \\
-			&= \sigma(u_{ci}) - t_{ci} \\
+			&=
+			\begin{cases}
+				\sigma(u_{ci}) - t_{ci}  &\mbox{for $i \in \{w_c\} \cup \{k \sim P_n(w) \}$}\\
+				0  &\mbox{Otherwise}
+			\end{cases}
 		\end{aligned}
 	\end{equation}
-		
+	
+	\subsubsection*{Complete Updating Rules}
+	For each context word $w_c$, 
+	\begin{framed}
+	\centering
+	let $S_{c} = \{w_c\} \cup \{k \sim P_n(w) \}$, \\
 	\begin{equation}
-		\begin{aligned}
-			\delta'_{c} &= \sigma(u_{c}) - t_{c} \\
-		\end{aligned}
+	\begin{aligned}
+		\delta'_{ci} &= \frac{\partial E}{\partial u_{ci}} = \sigma(u_{ci}) - t_{ci} &\mbox{for $i \in S_c$}
+	\end{aligned}
 	\end{equation}
+	
+	\begin{equation}
+	\begin{aligned}
+		v'_{i, new} &= v'_{i, old} - \eta \cdot \delta'_{ci} \cdot h  &\mbox{for $i \in S_c$}\\
+	\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+	\begin{aligned}
+		\delta_c &= \sum_{i \in S_c} \delta'_{ci} \cdot v'_{i}
+	\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+	\begin{aligned}
+		v_{w_I, new} &= v_{w_I, old} - \eta \cdot \delta_c 
+	\end{aligned}
+	\end{equation}
+	\end{framed}
 \end{document}
