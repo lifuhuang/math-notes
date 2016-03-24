@@ -128,7 +128,7 @@
 	\begin{equation}
 		\begin{aligned}
 			\frac{\partial E}{\partial W'_{ij}} &= \sum_{c=1}^{C} \sum_{k=1}^{V} \frac{\partial E}{\partial u_{ck}} \cdot \frac{\partial u_{ck}}{\partial W'_{ij}} \\
-			&= \sum_{c=1}^{C} \sum_{k=1}^{V} \delta'_{ci} \cdot \frac{\partial}{\partial W'_{ij}}\sum_{l=1}^{N} W'_{kl} \cdot h_l \\
+			&= \sum_{c=1}^{C} \sum_{k=1}^{V} \delta'_{ck} \cdot \frac{\partial}{\partial W'_{ij}}\sum_{l=1}^{N} W'_{kl} \cdot h_l \\
 			&= \left(\sum_{c=1}^{C} \delta'_{ci} \right)\cdot h_j \\
 			&= \gamma_i \cdot h_j
 		\end{aligned}	
