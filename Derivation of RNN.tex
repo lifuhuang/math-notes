@@ -1,0 +1,190 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{framed}
+
+\title{Derivation of RNN}
+\author{Lifu Huang}
+\date{Mar. 2016}
+\begin{document}
+	\maketitle
+	\section{Loss Function}
+	\begin{equation}
+	\begin{aligned}
+		J &= \frac{1}{T}\sum_{t=1}^{T} J^{(t)} \\
+		&= \frac{1}{T}\sum_{t=1}^{T} \sum_{j=1}^{|V|} -y^{(t)}_j \log \hat{y}^{(t)}_j \\
+		&= \frac{1}{T} \sum_{t=1}^T -\log{\hat{y}_k^{(t)}}	\\
+	\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+	\begin{aligned}	
+		J^{(t)} &= -\log{\hat{y}^{(t)}_k}
+	\end{aligned}
+	\end{equation}
+	
+	\section{Forward Propagation}
+	\begin{equation}
+	\begin{aligned}
+		h^{(t)} &= f(z^{(1)(t)}) \\
+		&= f(H \cdot h^{(t-1)} + W \cdot x^{(t)} + b_1) \\
+		\hat{y}^{(t)} &= g(z^{(2)(t)}) \\
+		&= g(U \cdot h^{(t)} + b_2) \\
+	\end{aligned}
+	\end{equation}
+	
+	\section{Backward Propagation}
+	\text{We take g(x) as softmax function here.} 
+	\subsection{Derivation of $\delta$s}
+	\begin{equation}
+	\begin{aligned}
+		\frac{\partial J^{(t)}}{\partial z^{(2)(t)}} &= \frac{\partial}{\partial z^{(2)(t)}} (-\log{\hat{y}^{(t)}_k}) \\
+		&= \frac{\partial}{\partial z^{(2)(t)}} (-z^{(2)(t)}_k + \log{\sum_{j=1}^{|V|} z^{(2)(t)}_j}) \\
+		&= (\hat{y}^{(t)} - y^{(t)})^T \\
+	\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+	\begin{aligned}
+		\delta^{(2)(t)} &= \nabla_{z^{(2)(t)}} J^{(t)} \\
+		&= \hat{y}^{(t)} - y^{(t)} \\
+	\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+		\begin{aligned}
+		\frac{\partial J^{(t)}}{\partial z^{(1)(t)}} &= \frac{\partial J^{(t)}}{\partial z^{(2)(t)}} 
+		\frac{\partial z^{(2)(t)}}{\partial z^{(1)(t)}} \\
+		&= (\delta^{(2)(t)})^T \cdot \frac{\partial}{\partial z^{(1)(t)}} (U \cdot f(z^{(1)(t)}) + b_2)\\
+		&= (\delta^{(2)(t)})^T \cdot U \cdot diag[f'(z^{(1)(t)})]\\
+		\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+	\begin{aligned}
+		\delta^{(1)(t)} &= \nabla_{z^{(1)(t)}} J^{(t)} \\
+		&= diag[f'(z^{(1)(t)})] \cdot U^T \cdot \delta^{(2)(t)}\\
+	\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+		\begin{aligned}
+		\frac{\partial J^{(t)}}{\partial z^{(1)(t-c)}} &= \frac{\partial J^{(t)}}{\partial z^{(1)(t-c+1)}} 
+		\frac{\partial z^{(1)(t-c+1)}}{\partial z^{(1)(t-c)}} \\
+		&= (\delta^{(1)(t-c+1)})^T \cdot \frac{\partial}{\partial z^{(1)(t-c)}} (H \cdot f(z^{(1)(t-c)}) + W \cdot x^{(t-c)} + b_1)\\
+		&= (\delta^{(1)(t-c+1)})^T \cdot H \cdot diag[f'(z^{(1)(t-c)})]\\
+		\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+		\begin{aligned}
+		\delta^{(1)(t-c)} &= \nabla_{z^{(1)(t-c)}} J^{(t)} \\
+		&= diag[f'(z^{(1)(t-c)})] \cdot H^T \cdot \delta^{(1)(t-c+1)}\\
+		\end{aligned}
+	\end{equation}
+	
+	\subsection{Gradients of Parameters}
+	\begin{equation}
+	\begin{aligned}
+		\frac{\partial J^{(t)}}{\partial U} &= \frac{\partial J^{(t)}}{\partial z^{(2)(t)}} 
+		\frac{\partial z^{(2)(t)}}{\partial U} \\
+		&= (\delta^{(2)(t)})^T \cdot \left[\frac{\partial z^{(2)(t)}_i}{\partial U}\right]\\
+		&= (\delta^{(2)(t)})^T \cdot \left[\frac{\partial }{\partial U} ((\epsilon_i)^T \cdot U \cdot a^{(1)(t)} + b_{2,i})\right]\\
+		&= (\delta^{(2)(t)})^T \cdot \left[a^{(1)(t)} \cdot (\epsilon_i)^T\right]\\	
+		&= a^{(1)(t)} \cdot (\delta^{(1)(t)})^T\\
+	\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+	\begin{aligned}
+		\nabla_U J^{(t)} &= \delta^{(2)(t)} \cdot (a^{(1)(t)})^T\\
+	\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+	\begin{aligned}
+		\frac{\partial J^{(t)}}{\partial b_2} &= \frac{\partial J^{(t)}}{\partial z^{(2)(t)}} 
+		\frac{\partial z^{(2)(t)}}{\partial b_2} \\
+		&= (\delta^{(2)(t)})^T \cdot I \\
+		&= (\delta^{(2)(t)})^T \\
+	\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+	\begin{aligned}
+		\nabla_{b_2} J^{(t)} &= \delta^{(2)(t)} \\
+	\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+	\begin{aligned}
+		\frac{\partial J^{(t)}}{\partial H} &= \sum_{i=1}^{t} \frac{\partial J^{(t)}}{\partial H}\bigg|_{(i)}  \\
+		&= \sum_{i=1}^{t}
+		\frac{\partial J^{(t)}}{\partial z^{(1)(i)}} 
+		\frac{\partial z^{(1)(i)}}{\partial H}\bigg|_{(i)} \\
+		&= \sum_{i=1}^{t}
+		(\delta^{(1)(i)})^T \cdot \left[\frac{\partial }{\partial H} ((\epsilon_i)^T \cdot H \cdot h^{(i-1)} + (\epsilon_i)^T \cdot W \cdot x^{(i)} + b_{1,i})\right] \\
+		&= \sum_{i=1}^{t}
+		(\delta^{(1)(i)})^T \cdot \left[h^{(i-1)} \cdot (\epsilon_i)^T\right]\\	
+		&= \sum_{i=1}^{t} h^{(i-1)} \cdot (\delta^{(1)(i)})^T\\
+	\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+	\begin{aligned}
+		\nabla_H J^{(t)} &= \sum_{i=1}^{t} \delta^{(1)(i)} \cdot  (h^{(i-1)})^T\\
+	\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+	\begin{aligned}
+		\frac{\partial J^{(t)}}{\partial W} &= \sum_{i=1}^{t} \frac{\partial J^{(t)}}{\partial W}\bigg|_{(i)}  \\
+		&= \sum_{i=1}^{t}
+		\frac{\partial J^{(t)}}{\partial z^{(1)(i)}} 
+		\frac{\partial z^{(1)(i)}}{\partial W}\bigg|_{(i)} \\
+		&= \sum_{i=1}^{t}
+		(\delta^{(1)(i)})^T \cdot \left[\frac{\partial }{\partial W}((\epsilon_i)^T \cdot H \cdot h^{(i-1)} + (\epsilon_i)^T \cdot W \cdot x^{(i)} + b_{1,i})\right] \\
+		&= \sum_{i=1}^{t}
+		(\delta^{(1)(i)})^T \cdot \left[x^{(i)} \cdot (\epsilon_i)^T\right]\\	
+		&= \sum_{i=1}^{t} x^{(i)} \cdot (\delta^{(1)(i)})^T\\
+	\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+	\begin{aligned}
+		\nabla_W J^{(t)} &= \sum_{i=1}^{t} \delta^{(1)(i)} \cdot  (x^{(i)})^T\\
+	\end{aligned}
+	\end{equation}	
+		
+	\begin{equation}
+	\begin{aligned}
+		\frac{\partial J^{(t)}}{\partial b1} &= \sum_{i=1}^{t} \frac{\partial J^{(t)}}{\partial b1}\bigg|_{(i)}  \\
+		&= \sum_{i=1}^{t}
+		\frac{\partial J^{(t)}}{\partial z^{(1)(i)}} 
+		\frac{\partial z^{(1)(i)}}{\partial b1}\bigg|_{(i)} \\
+		&= \sum_{i=1}^{t}
+		(\delta^{(1)(i)})^T \cdot I \\
+		&= \sum_{i=1}^{t} (\delta^{(1)(i)})^T\\
+	\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+	\begin{aligned}
+		\nabla_{b_1} J^{(t)} &= \sum_{i=1}^{t} \delta^{(1)(i)} \\
+	\end{aligned}
+	\end{equation}	
+	
+	\section{Conclusion}
+	\begin{align}
+		\delta^{(2)(t)} &= \hat{y}^{(t)} - y^{(t)} \\
+		\delta^{(1)(t)} &= \nabla_{z^{(1)(t)}} J^{(t)} \\
+		&= diag[f'(z^{(1)(t)})] \cdot U^T \cdot \delta^{(2)(t)}\\
+		\delta^{(1)(t-c)} &= diag[f'(z^{(1)(t-c)})] \cdot H^T \cdot \delta^{(1)(t-c+1)}\\
+		\nabla_U J^{(t)} &= \delta^{(2)(t)} \cdot (a^{(1)(t)})^T\\
+		\nabla_{b_2} J^{(t)} &= \delta^{(2)(t)} \\
+		\nabla_H J^{(t)} &= \sum_{i=1}^{t} \delta^{(1)(i)} \cdot  (h^{(i-1)})^T\\
+		\nabla_W J^{(t)} &= \sum_{i=1}^{t} \delta^{(1)(i)} \cdot  (x^{(i)})^T\\
+		\nabla_{b_1} J^{(t)} &= \sum_{i=1}^{t} \delta^{(1)(i)} \\
+	\end{align}
+\end{document}
