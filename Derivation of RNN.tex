@@ -175,11 +175,10 @@
 	\end{aligned}
 	\end{equation}	
 	
-	\section{Conclusion}
+	\subsection{Conclusion}
 	\begin{align}
 		\delta^{(2)(t)} &= \hat{y}^{(t)} - y^{(t)} \\
-		\delta^{(1)(t)} &= \nabla_{z^{(1)(t)}} J^{(t)} \\
-		&= diag[f'(z^{(1)(t)})] \cdot U^T \cdot \delta^{(2)(t)}\\
+		\delta^{(1)(t)} &= diag[f'(z^{(1)(t)})] \cdot U^T \cdot \delta^{(2)(t)}\\
 		\delta^{(1)(t-c)} &= diag[f'(z^{(1)(t-c)})] \cdot H^T \cdot \delta^{(1)(t-c+1)}\\
 		\nabla_U J^{(t)} &= \delta^{(2)(t)} \cdot (a^{(1)(t)})^T\\
 		\nabla_{b_2} J^{(t)} &= \delta^{(2)(t)} \\
@@ -187,4 +186,72 @@
 		\nabla_W J^{(t)} &= \sum_{i=1}^{t} \delta^{(1)(i)} \cdot  (x^{(i)})^T\\
 		\nabla_{b_1} J^{(t)} &= \sum_{i=1}^{t} \delta^{(1)(i)} \\
 	\end{align}
+	
+	\newpage
+	\section{Trick for Implementation}
+	Derivation above is made with respect to the loss function of a single time step, (i.e. $\nabla J^{(t)}$). When taking derivative of the final loss function $\nabla J$, instead of calculate $\nabla J^{(t)}$ for every time step and sum them up at last, which is correct but inefficient. We backprop only once by keeping record of $\gamma^{(t)}$, which is the accumulating sum of $\delta^{(1)(i)(t)}$ over range $t$ to $T$.\footnote{We will slightly change our notation here by adding one more superscript to $\delta$ so as to differentiate $\delta$ from different $J^{(t)}$, now $\delta^{(1)(i)(t)} = \nabla_{z^{(1)(t)}}J^{(i)}$.} \\\\
+	It is easy to find that,\\
+	\begin{equation}
+	\begin{aligned}
+		\text{for $1 \le t \le T-1$:}\\
+		\gamma^{(t)} &= \sum_{i=t}^{T} \delta^{(1)(i)(t)} \\
+		&= \delta^{(1)(t)(t)} + \sum_{i=t+1}^{T} \delta^{(1)(i)(t)} \\
+		&= \delta^{(1)(t)(t)} + \sum_{i=t+1}^{T} diag[f'(z^{(1)(t)})] \cdot H^T \cdot \delta^{(1)(i)(t+1)} \\
+		&= \delta^{(1)(t)(t)} + diag[f'(z^{(1)(t)})] \cdot H^T \cdot \left(\sum_{i=t+1}^{T} \delta^{(1)(i)(t+1)}\right) \\		
+		&= \delta^{(1)(t)(t)} + diag[f'(z^{(1)(t)})] \cdot H^T \cdot \gamma^{(t+1)} 
+	\end{aligned}
+	\end{equation}
+	
+	Thus,\\
+	\begin{equation}
+	\begin{aligned}
+		\gamma^{(t)} &= 
+		\begin{cases}
+			\delta^{(1)(t)(t)} &t=T \\
+			\delta^{(1)(t)(t)} + diag[f'(z^{(1)(t)})] \cdot H^T \cdot \gamma^{(t+1)} & otherwise
+		\end{cases}
+	\end{aligned}
+	\end{equation}
+	
+	We can now simplify our gradients by reorganizing terms and using $\gamma$s instead of $\delta$s,
+	\begin{equation}
+	\begin{aligned}
+		\nabla_{H} J &= \sum_{i=1}^{T} \sum_{j=1}^{i} \delta^{(1)(i)(j)} \cdot  (h^{(j-1)})^T\\
+		&= \sum_{i=1}^{T} \sum_{j=i}^{T} \delta^{(1)(j)(i)} \cdot  (h^{(i-1)})^T\\
+		&= \sum_{i=1}^{T} \gamma^{(i)} \cdot  (h^{(i-1)})^T\\
+	\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+	\begin{aligned}
+		\nabla_{W} J &= \sum_{i=1}^{T} \sum_{j=1}^{i} \delta^{(1)(i)(j)} \cdot  (x^{(j)})^T\\
+		&= \sum_{i=1}^{T} \sum_{j=i}^{T} \delta^{(1)(j)(i)} \cdot  (x^{(i)})^T\\
+		&= \sum_{i=1}^{T} \gamma^{(i)} \cdot  (x^{(i)})^T\\
+	\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+	\begin{aligned}
+		\nabla_{b_1} J &= \sum_{i=1}^{T} \sum_{j=1}^{i} \delta^{(1)(i)(j)} \\
+		&= \sum_{i=1}^{T} \sum_{j=i}^{T} \delta^{(1)(j)(i)} \\
+		&= \sum_{i=1}^{T} \gamma^{(i)} \\
+	\end{aligned}
+	\end{equation}
+	Mnn, putting every thing together,
+	\begin{framed}
+	\begin{align}
+		\delta^{(2)(t)} &= \hat{y}^{(t)} - y^{(t)} \\	
+		\delta^{(1)(t)(t)} &= diag[f'(z^{(1)(t)})] \cdot U^T \cdot \delta^{(2)(t)}\\
+		\gamma^{(t)} &= 
+		\begin{cases}
+		\delta^{(1)(t)(t)} &t=T \\
+		\delta^{(1)(t)(t)} + diag[f'(z^{(1)(t)})] \cdot H^T \cdot \gamma^{(t+1)} & otherwise
+		\end{cases}\\
+		\nabla_U J &= \sum_{t=1}^{T}\delta^{(2)(t)} \cdot (a^{(1)(t)})^T\\
+		\nabla_{b_2} J &= \sum_{t=1}^{T}\delta^{(2)(t)} \\
+		\nabla_H J &= \sum_{i=1}^{T} \gamma^{(i)} \cdot  (h^{(i-1)})^T\\
+		\nabla_W J &= \sum_{i=1}^{T} \gamma^{(i)} \cdot  (x^{(i)})^T\\
+		\nabla_{b_1} J &= \sum_{i=1}^{T} \gamma^{(i)} \\
+	\end{align}
+	\end{framed}
 \end{document}
