@@ -333,13 +333,14 @@
 		\begin{cases}
 			\hat{y}^{(t)} - y^{(t)} &l=n\\	
 			f'(z^{(l)(t)}) \bullet (U^T \delta^{(l+1)(t)(t)}) &l=n-1\\
-			f'(z^{(l)(t)}) \bullet ((W^{(l+1)})^T \cdot \delta^{(l+1)(t)(t)}) &l<n-1
+			f'(z^{(l)(t)}) \bullet ((W^{(l+1)})^T \delta^{(l+1)(t)(t)}) &l<n-1
 		\end{cases} 
 		\\
 		\delta^{(l)(t-c)(t)} &=
 		\begin{cases}
-			f'(z^{(l)(t-c)}) \bullet ((H^{(l)})^T \delta^{(l)(t-c+1)(t)}) &l=n-1\\
-			f'(z^{(l)(t-c)}) \bullet ((H^{(l)})^T \delta^{(l)(t-c+1)(t)} \\+ (W^{(l+1)})^T \delta^{(l+1)(t-c)(t)}) &l<n-1
+			f'(z^{(l)(t-c)}) \bullet ((H^{(l)})^T \delta^{(l)(t-c+1)(t)}) &l=n-1 \\
+			f'(z^{(l)(t-c)}) \bullet ((H^{(l)})^T \delta^{(l)(t-c+1)(t)} + \\
+			 (W^{(l+1)})^T \delta^{(l+1)(t-c)(t)}) &l<n-1
 		\end{cases} 
 		\\
 		\gamma^{(l)(t)} &= 
@@ -348,15 +349,15 @@
 		\\
 		\delta^{(l)(t)(t)} + f'(z^{(l)(t)}) \bullet ((H^{(l)})^T \gamma^{(l)(t+1)}) &l=n-1
 		\\
-		\delta^{(l)(t)(t)} + f'(z^{(l)(t)}) \bullet \\ (H^{(l)})^T \gamma^{(l)(t+1)} + (W^{(l+1)})^T (\gamma^{(l+1)(t)} - \delta^{(l+1)(t)(t)}) &l<n-1
+		\delta^{(l)(t)(t)} + f'(z^{(l)(t)}) \bullet ((H^{(l)})^T \gamma^{(l)(t+1)} + \\ (W^{(l+1)})^T (\gamma^{(l+1)(t)} - \delta^{(l+1)(t)(t)})) &l<n-1
 		\end{cases}
 		\\
-		\nabla_{U^{(l)}} J &= \frac{1}{T} \sum_{t=1}^{T}\delta^{(n)(t)} \cdot (h^{(n-1)(t)})^T\\
-		\nabla_{c} J &= \frac{1}{T} \sum_{t=1}^{T}\delta^{(n)(t)} 
+		\nabla_{U} J &= \frac{1}{T} \sum_{t=1}^{T}\delta^{(n)(t)(t)} (h^{(n-1)(t)})^T\\
+		\nabla_{c} J &= \frac{1}{T} \sum_{t=1}^{T}\delta^{(n)(t)(t)} 
 		\\
-		\nabla_{H^{(l)}} J &= \frac{1}{T} \sum_{t=1}^{T} \gamma^{(l)(t)} \cdot  (h^{(l)(t-1)})^T
+		\nabla_{H^{(l)}} J &= \frac{1}{T} \sum_{t=1}^{T} \gamma^{(l)(t)} (h^{(l)(t-1)})^T
 		\\
-		\nabla_{W^{(l)}} J &= \frac{1}{T} \sum_{t=1}^{T} \gamma^{(l)(t)} \cdot  (h^{(l-1)(t)})^T
+		\nabla_{W^{(l)}} J &= \frac{1}{T} \sum_{t=1}^{T} \gamma^{(l)(t)} (h^{(l-1)(t)})^T
 		\\
 		\nabla_{b^{(l)}} J &= \frac{1}{T} \sum_{t=1}^{T} \gamma^{(l)(t)}
 	\end{align}
