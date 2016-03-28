@@ -28,7 +28,7 @@
 	\end{equation}
 	\begin{equation}
 		\begin{aligned}
-			\delta^{(n_l)} &= - (y - a^{(n_l)}) \bullet f'(z^{(n_l)}) 
+			\delta^{(n_l)} &= - (y - a^{(n_l)}) \circ f'(z^{(n_l)}) 
 		\end{aligned}
 	\end{equation}
 
@@ -44,7 +44,7 @@
 	\end{equation}
 	\begin{equation}
 		\begin{aligned}
-			\delta^{(l)} &= ((W^{(l)})^T \delta^{(l+1)}) \bullet f'(z^{(l)}) 
+			\delta^{(l)} &= ((W^{(l)})^T \delta^{(l+1)}) \circ f'(z^{(l)}) 
 		\end{aligned}
 	\end{equation}
 	\subsection{Derivative wrt W}
@@ -76,8 +76,8 @@
 	
 	\section{Conclusion}
 	\begin{align}
-		\delta^{(n_l)} &= - (y - a^{(n_l)}) \bullet f'(z^{(n_l)}) \\
-		\delta^{(l)} &= ((W^{(l)})^T \delta^{(l+1)}) \bullet f'(z^{(l)}) \\
+		\delta^{(n_l)} &= - (y - a^{(n_l)}) \circ f'(z^{(n_l)}) \\
+		\delta^{(l)} &= ((W^{(l)})^T \delta^{(l+1)}) \circ f'(z^{(l)}) \\
 		\nabla_{W^{(l)}} J(W, b; x, y) &= \delta^{(l+1)}(a^{(l)})^T \\
 		\nabla_{b^{(l)}} J(W, b; x, y) &= \delta^{(l+1)} 
 	\end{align}

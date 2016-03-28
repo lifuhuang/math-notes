@@ -281,7 +281,7 @@
 		&= \delta^{(n-1)(t)(t)} + \sum_{i=t+1}^{T} diag[f'(z^{(n-1)(t)})] \cdot (H^{(n-1)})^T \cdot \delta^{(n-1)(t+1)(i)}\\
 		&= \delta^{(n-1)(t)(t)} + diag[f'(z^{(n-1)(t)})] \cdot (H^{(n-1)})^T \cdot \sum_{i=t+1}^{T} \delta^{(n-1)(t+1)(i)}\\
 		&= \delta^{(n-1)(t)(t)} + diag[f'(z^{(n-1)(t)})] \cdot (H^{(n-1)})^T \cdot \gamma^{(n-1)(t+1)} \\
-		&= \delta^{(n-1)(t)(t)} + f'(z^{(n-1)(t)})\bullet ((H^{(n-1)})^T \cdot \gamma^{(n-1)(t+1)})
+		&= \delta^{(n-1)(t)(t)} + f'(z^{(n-1)(t)})\circ ((H^{(n-1)})^T \cdot \gamma^{(n-1)(t+1)})
 	\end{aligned}
 	\end{equation}
 	
@@ -295,7 +295,7 @@
 		&= \delta^{(l)(t)(t)} + \sum_{i=t+1}^{T} diag[f'(z^{(l)(t)})] ((H^{(l)})^T \cdot \delta^{(l)(t+1)(i)} + (W^{(l+1)})^T \cdot \delta^{(l+1)(t)(i)}) \\
 		&= \delta^{(l)(t)(t)} + diag[f'(z^{(l)(t)})] \\
 		&\left( (H^{(l)})^T \left(\sum_{i=t+1}^{T} \delta^{(l)(t+1)(i)}\right) + (W^{(l+1)})^T \left(\sum_{i=t+1}^{T} \delta^{(l+1)(t)(i)}\right) \right) \\		
-		&= \delta^{(l)(t)(t)} + f'(z^{(l)(t)}) \bullet ( (H^{(l)})^T \cdot \gamma^{(l)(t+1)} + (W^{(l+1)})^T (\gamma^{(l+1)(t)} - \delta^{(l+1)(t)(t)}))
+		&= \delta^{(l)(t)(t)} + f'(z^{(l)(t)}) \circ ( (H^{(l)})^T \cdot \gamma^{(l)(t+1)} + (W^{(l+1)})^T (\gamma^{(l+1)(t)} - \delta^{(l+1)(t)(t)}))
 	\end{aligned}
 	\end{equation}
 	
@@ -332,14 +332,14 @@
 		\delta^{(l)(t)(t)} &=
 		\begin{cases}
 			\hat{y}^{(t)} - y^{(t)} &l=n\\	
-			f'(z^{(l)(t)}) \bullet (U^T \delta^{(l+1)(t)(t)}) &l=n-1\\
-			f'(z^{(l)(t)}) \bullet ((W^{(l+1)})^T \delta^{(l+1)(t)(t)}) &l<n-1
+			f'(z^{(l)(t)}) \circ (U^T \delta^{(l+1)(t)(t)}) &l=n-1\\
+			f'(z^{(l)(t)}) \circ ((W^{(l+1)})^T \delta^{(l+1)(t)(t)}) &l<n-1
 		\end{cases} 
 		\\
 		\delta^{(l)(t-c)(t)} &=
 		\begin{cases}
-			f'(z^{(l)(t-c)}) \bullet ((H^{(l)})^T \delta^{(l)(t-c+1)(t)}) &l=n-1 \\
-			f'(z^{(l)(t-c)}) \bullet ((H^{(l)})^T \delta^{(l)(t-c+1)(t)} + \\
+			f'(z^{(l)(t-c)}) \circ ((H^{(l)})^T \delta^{(l)(t-c+1)(t)}) &l=n-1 \\
+			f'(z^{(l)(t-c)}) \circ ((H^{(l)})^T \delta^{(l)(t-c+1)(t)} + \\
 			 (W^{(l+1)})^T \delta^{(l+1)(t-c)(t)}) &l<n-1
 		\end{cases} 
 		\\
@@ -347,9 +347,9 @@
 		\begin{cases}
 		\delta^{(l)(t)(t)} &t=T
 		\\
-		\delta^{(l)(t)(t)} + f'(z^{(l)(t)}) \bullet ((H^{(l)})^T \gamma^{(l)(t+1)}) &l=n-1
+		\delta^{(l)(t)(t)} + f'(z^{(l)(t)}) \circ ((H^{(l)})^T \gamma^{(l)(t+1)}) &l=n-1
 		\\
-		\delta^{(l)(t)(t)} + f'(z^{(l)(t)}) \bullet ((H^{(l)})^T \gamma^{(l)(t+1)} + \\ (W^{(l+1)})^T (\gamma^{(l+1)(t)} - \delta^{(l+1)(t)(t)})) &l<n-1
+		\delta^{(l)(t)(t)} + f'(z^{(l)(t)}) \circ ((H^{(l)})^T \gamma^{(l)(t+1)} + \\ (W^{(l+1)})^T (\gamma^{(l+1)(t)} - \delta^{(l+1)(t)(t)})) &l<n-1
 		\end{cases}
 		\\
 		\nabla_{U} J &= \frac{1}{T} \sum_{t=1}^{T}\delta^{(n)(t)(t)} (h^{(n-1)(t)})^T\\
