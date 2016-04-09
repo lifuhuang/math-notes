@@ -1,0 +1,126 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{framed}
+\usepackage{amssymb}
+
+\title{Assignment 2 for CS224d}
+\author{Lifu Huang}
+\date{March 2016}
+
+\begin{document}
+\maketitle
+\setcounter{section}{-1}
+\section{Warmup: Boolean Logic}
+\subsubsection*{(a)}
+\begin{equation}
+XOR(x, y) = NOT(x\ AND\ y)\ AND\ (x\ OR\ y)
+\end{equation}
+\subsubsection*{(b)}
+\begin{align}
+h_{AND}(x, y) &= \theta(x + y - 1.5) \\
+h_{OR}(x, y) &= \theta(x + y - 0.5) \\
+h_{NOT}(x) &= \theta(-x + 0.5) \\
+\end{align}
+\subsubsection*{(c)}
+See part0-XOR.ipynb
+
+\section{Deep Networks for Named Entity Recognition}
+\subsubsection*{(a)}
+\begin{align}
+\delta^{(2)}
+&= \nabla_{z^{(2)}} J\\
+&= \hat{y} - y\\
+\frac{\partial J}{\partial U} 
+&= \frac{\partial J}{\partial z^{(2)}} \frac{\partial z^{(2)}}{\partial U} \\
+&= (\delta^{(2)})^T \left[\frac{\partial z^{(2)}_i}{\partial U}\right] \\
+&= (\delta^{(2)})^T \left[\frac{\partial }{\partial U} (\epsilon_i^T (U h + b_2))\right] \\
+&= (\delta^{(2)})^T \left[h(\epsilon_i)^T\right] \\
+&= h (\delta^{(2)})^T \\
+\nabla_U J &= \delta^{(2)}h^T \\
+\text{similarly,}\\
+\nabla_{b2} J &= \delta^{(2)} \\
+\delta^{(1)} &= (1 - h^2) \circ (U^T \delta^{(2)}) \\
+\nabla_{W} &= \delta^{(1)} x^{(t)} \\ 
+\nabla_{b_1} &= \delta^{(1)} \\
+\nabla_{L} &= W^T \delta^{(1)}
+\end{align}
+\subsubsection*{(b)}
+\begin{align}
+\nabla_U J_{full} 
+&= \nabla_U J + \nabla_U J_{reg} \\
+&= \delta^{(2)}h^T + \lambda U \\
+\nabla_W J_{full} 
+&= \nabla_W J + \nabla_W J_{reg} \\
+&= \delta^{(1)}(x^{(t)})^T + \lambda W 
+\end{align}
+\subsubsection*{(b*)}
+\paragraph{Proof}
+\begin{align*}
+P(\theta|\Sigma, \mu) 
+&= \frac{1}{(2\pi)^{n/2}|\Sigma|^{\frac{1}{2}}}exp(-\frac{1}{2}(\theta-\mu)^T \Sigma^{-1}(\theta-\mu)) \\
+&=  \frac{1}{(2\pi)^{n/2}}exp(-\frac{1}{2}\theta^T\theta{}) \\
+\log P(\theta|\Sigma, \mu) 
+&= \log \frac{1}{(2\pi)^{n/2}}exp(-\frac{1}{2}\theta^T\theta) \\
+&= -\log (2\pi)^{n/2} -\frac{1}{2}||\theta||^2 \\
+\arg\max_\theta \log P(\theta|\Sigma, \mu) 
+&= \arg\max_\theta \frac{1}{2} ||\theta||^2 
+\end{align*}
+
+\subsubsection*{(c), (d), (e), (f)}
+Please see specific files for solution to these questions.\\
+
+
+\subsection{Deep Networks: Probing Neuron Responses}
+Please see specific files for solution to this question.\\
+
+\section{Recurrent Neural Networks: Language Modeling}	
+\subsubsection*{(a)}
+\paragraph{Proof}
+\begin{align*}
+PP^{(t)}(\hat{y}^{(t)}, y^{(t)}) 
+&= \frac{1}{\hat{P}(x^{pred}_{t+1}=x_{t+1}|x_t, ..., x_1)}\\
+&= \frac{1}{\sum_{j=1}^{|V|}y^{(t)}_j \hat{y}^{(t)}_j} \\
+&= \frac{1}{\hat{y}^{(t)}_k} \\
+&= \exp(-\log \hat{y}^{(t)}_k)\\
+&= \exp(J^{(t)}) \\	
+\arg\min_{\theta} \left(\prod_{t=1}^{T}PP^{(t)}(\hat{y}^{(t)}, y^{(t)})\right)^{\frac{1}{T}} &= \arg\min_{\theta} \left( \log \left(\prod_{t=1}^{T}PP^{(t)}(\hat{y}^{(t)}, y^{(t)})\right)^{\frac{1}{T}} \right) \\
+&= \arg\min_{\theta} \left(\frac{1}{T}\sum_{t=1}^{T} \log PP^{(t)}(\hat{y}^{(t)}, y^{(t)})\right) \\
+&= \arg\min_{\theta} \left(\frac{1}{T}\sum_{t=1}^{T} J^{(t)} \right)\\
+\text{TED}
+\end{align*}
+
+\paragraph{Baseline}
+\begin{align*}
+PP^{(t)}(\hat{y}^{(t)}, y^{(t)}) 
+&= \frac{1}{\hat{y}^{(t)}_k} \\
+&= \frac{1}{\frac{1}{|V|}} \\
+&= |V| \\
+CE_{2000} &= \log 2000 = 7.6 \\
+CE_{10000} &= \log 10000 = 9.2 \\
+\end{align*}
+\subsubsection*{(b)}
+\begin{align*}
+\delta^{(2)(t)} &= \hat{y}^{(t)} - y^{(t)} \\
+\nabla_U J^{(t)} &= \delta^{(2)(t)} (h^{(t)})^T \\
+\delta^{(1)(t)} &= h^{(t)} \circ (1 - h^{(t)}) \circ (W^T \delta^{(2)(t)}) \\
+\nabla_{L_{x^{(t)}}} J^{(t)} &= \delta^{(1)(t)} \\
+\nabla_{H} J^{(t)} \big|_{(t)} &= \delta^{(1)(t)} (h^{(t-1)})^T \\
+\nabla_{h^{(t-1)}} J^{(t)} &= H^T (\delta^{(1)(t)}) 
+\end{align*}
+\subsubsection*{(c)}
+\begin{align*}
+\delta^{(1)(t-1)} &= h^{(t-1)} \circ (1 - h^{(t-1)}) \circ (H^T \delta^{(1)(t)}) \\
+\nabla_{L_{x^{(t-1)}}} J^{(t)} &= \delta^{(1)(t-1)} \\
+\nabla_{H} J^{(t)} \big|_{(t-1)} &= \delta^{(1)(t-1)} (h^{(t-2)})^T \\
+\end{align*}
+\subsubsection*{(d)}
+\begin{align*}
+\text{Forward for one step} &= O(|V| D_h) \\
+\text{Backward for one step} &= O(|V| D_h)\\
+\text{Backward for $\tau$ steps} &= O(|V| D_h)\\
+\end{align*}
+if $|V| > D_h$, then the slow step is the computation of the output layer.
+\subsubsection*{(e)(f)(g)}
+Please see specific files for solution to these questions.\\
+\end{document}

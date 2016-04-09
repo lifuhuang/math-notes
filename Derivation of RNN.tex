@@ -46,8 +46,8 @@
 	\begin{aligned}
 		z^{(l)(t)} &= 
 		\begin{cases}
-			U \cdot h^{(l-1)(t)} + c &l = n\\
-			H^{(l)} \cdot h^{(l)(t-1)} + W^{(l)} \cdot h^{(l-1)(t)} + b^{(l)} &0 < l < n
+			W^{(l)} h^{(l-1)(t)} + b^{(l)} &l = n\\
+			H^{(l)} h^{(l)(t-1)} + W^{(l)} h^{(l-1)(t)} + b^{(l)} &0 < l < n
 		\end{cases}
 	\end{aligned}
 	\end{equation}
@@ -79,8 +79,8 @@
 		\frac{\partial J^{(t)}}{\partial z^{(n-1)(t)}} 
 		&= \frac{\partial J^{(t)}}{\partial z^{(n)(t)}} 
 		\frac{\partial z^{(n)(t)}}{\partial z^{(n-1)(t)}} \\
-		&= (\delta^{(n)(t)})^T \cdot \frac{\partial}{\partial z^{(n-1)(t)}} (U \cdot f(z^{(n-1)(t)}) + c)\\
-		&= (\delta^{(n)(t)})^T \cdot U \cdot diag[f'(z^{(n-1)(t)})]
+		&= (\delta^{(n)(t)})^T  \frac{\partial}{\partial z^{(n-1)(t)}} (W^{(n)} f(z^{(n-1)(t)}) + b^{(n)})\\
+		&= (\delta^{(n)(t)})^T  W^{(n)}  diag[f'(z^{(n-1)(t)})]
 		\end{aligned}
 	\end{equation}
 	
@@ -88,7 +88,7 @@
 	\begin{aligned}
 		\delta^{(n-1)(t)} 
 		&= \nabla_{z^{(n-1)(t)}} J^{(t)} \\
-		&= diag[f'(z^{(n-1)(t)})] \cdot U^T \cdot \delta^{(n)(t)}
+		&= diag[f'(z^{(n-1)(t)})] (W^{(n)})^T \delta^{(n)(t)}
 	\end{aligned}
 	\end{equation}
 	
@@ -97,9 +97,9 @@
 		\frac{\partial J^{(t)}}{\partial z^{(n-1)(t-c)}} 
 		&= \frac{\partial J^{(t)}}{\partial z^{(n-1)(t-c+1)}} 
 		\frac{\partial z^{(n-1)(t-c+1)}}{\partial z^{(n-1)(t-c)}} \\
-		&= (\delta^{(n-1)(t-c+1)})^T \cdot \frac{\partial}{\partial z^{(n-1)(t-c)}} (H^{(n-1)} \cdot h^{(n-1)(t-c)} + W^{(n-1)} \cdot h^{(n-2)(t-c+1)} + b^{(n-1)})\\		
-		&= (\delta^{(n-1)(t-c+1)})^T \cdot \frac{\partial}{\partial z^{(n-1)(t-c)}} (H^{(n-1)} \cdot f(z^{(n-1)(t-c)}))\\
-		&= (\delta^{(n-1)(t-c+1)})^T \cdot H^{(n-1)} \cdot diag[f'(z^{(n-1)(t-c)})]
+		&= (\delta^{(n-1)(t-c+1)})^T \frac{\partial}{\partial z^{(n-1)(t-c)}} (H^{(n-1)} h^{(n-1)(t-c)} + W^{(n-1)} h^{(n-2)(t-c+1)} + b^{(n-1)})\\		
+		&= (\delta^{(n-1)(t-c+1)})^T \frac{\partial}{\partial z^{(n-1)(t-c)}} (H^{(n-1)} f(z^{(n-1)(t-c)}))\\
+		&= (\delta^{(n-1)(t-c+1)})^T H^{(n-1)} diag[f'(z^{(n-1)(t-c)})]
 	\end{aligned}
 	\end{equation}
 		
@@ -107,7 +107,7 @@
 	\begin{aligned}
 		\delta^{(n-1)(t-c)} 
 		&= \nabla_{z^{(n-1)(t-c)}} J^{(t)} \\
-		&= diag[f'(z^{(n-1)(t-c)})] \cdot (H^{(n-1)})^T \cdot \delta^{(n-1)(t-c+1)}
+		&= diag[f'(z^{(n-1)(t-c)})] (H^{(n-1)})^T \delta^{(n-1)(t-c+1)}
 	\end{aligned}
 	\end{equation}
 	
@@ -117,9 +117,9 @@
 		\frac{\partial J^{(t)}}{\partial z^{(l)(t)}} 
 		&= \frac{\partial J^{(t)}}{\partial z^{(l+1)(t)}} 
 		\frac{\partial z^{(l+1)(t)}}{\partial z^{(l)(t)}} \\
-		&= (\delta^{(l+1)(t)})^T \cdot \frac{\partial}{\partial z^{(l)(t)}} (H^{(l+1)} \cdot h^{(l+1)(t-1)} + W^{(l+1)} \cdot h^{(l)(t)} + b^{(l+1)})\\
-		&= (\delta^{(l+1)(t)})^T \cdot \frac{\partial}{\partial z^{(l)(t)}} (W^{(l+1)} \cdot f(z^{(l)(t)}))\\
-		&= (\delta^{(l+1)(t)})^T \cdot W^{(l+1)} \cdot diag[f'(z^{(l)(t)})]
+		&= (\delta^{(l+1)(t)})^T \frac{\partial}{\partial z^{(l)(t)}} (H^{(l+1)} h^{(l+1)(t-1)} + W^{(l+1)} h^{(l)(t)} + b^{(l+1)})\\
+		&= (\delta^{(l+1)(t)})^T \frac{\partial}{\partial z^{(l)(t)}} (W^{(l+1)} f(z^{(l)(t)}))\\
+		&= (\delta^{(l+1)(t)})^T W^{(l+1)} diag[f'(z^{(l)(t)})]
 	\end{aligned}
 	\end{equation}
 		
@@ -127,7 +127,7 @@
 	\begin{aligned}
 		\delta^{(l)(t)} 
 		&= \nabla_{z^{(l)(t)}} J^{(t)} \\
-		&= diag[f'(z^{(l)(t)})] \cdot (W^{(l+1)})^T \cdot \delta^{(l+1)(t)}
+		&= diag[f'(z^{(l)(t)})] (W^{(l+1)})^T \delta^{(l+1)(t)}
 	\end{aligned}
 	\end{equation}
 	
@@ -137,58 +137,27 @@
 		&= \left(\frac{\partial J^{(t)}}{\partial z^{(l)(t-c+1)}} 
 		\frac{\partial z^{(l)(t-c+1)}}{\partial z^{(l)(t-c)}}\right) + \left(\frac{\partial J^{(t)}}{\partial z^{(l+1)(t-c)}} 
 		\frac{\partial z^{(l+1)(t-c)}}{\partial z^{(l)(t-c)}}\right)\\
-		&= \left((\delta^{(l)(t-c+1)})^T \cdot \frac{\partial}{\partial z^{(l)(t-c)}} (H^{(l)} \cdot h^{(l)(t-c)} + W^{(l)} \cdot h^{(l-1)(t-c+1)} + b^{(l)}) \right) +\\
-		& \left( (\delta^{(l+1)(t-c)})^T \cdot \frac{\partial}{\partial z^{(l)(t-c)}}(H^{(l+1)} \cdot h^{(l+1)(t-c-1)} + W^{(l+1)} \cdot h^{(l)(t-c)} + b^{(l+1)}) \right)\\
-		&= \left((\delta^{(l)(t-c+1)})^T \cdot \frac{\partial}{\partial z^{(l)(t-c)}} (H^{(l)} \cdot f(z^{(l)(t-c)}))\right) +\\
-		&\left( (\delta^{(l+1)(t-c)})^T \cdot \frac{\partial}{\partial z^{(l)(t-c)}}(W^{(l+1)} \cdot f(z^{(l)(t-c)}))\right)\\
-		&= (\delta^{(l)(t-c+1)})^T \cdot H^{(l)} \cdot diag[f'(z^{(l)(t-c)})] + 
-		(\delta^{(l+1)(t-c)})^T \cdot W^{(l+1)} \cdot diag[f'(z^{(l)(t-c)})] \\
-		&= ((\delta^{(l)(t-c+1)})^T \cdot H^{(l)} + 
-		(\delta^{(l+1)(t-c)})^T \cdot W^{(l+1)}) \cdot diag[f'(z^{(l)(t-c)})]  
+		&= \left((\delta^{(l)(t-c+1)})^T \frac{\partial}{\partial z^{(l)(t-c)}} (H^{(l)} h^{(l)(t-c)} + W^{(l)} h^{(l-1)(t-c+1)} + b^{(l)}) \right) +\\
+		& \left( (\delta^{(l+1)(t-c)})^T \frac{\partial}{\partial z^{(l)(t-c)}}(H^{(l+1)} h^{(l+1)(t-c-1)} + W^{(l+1)} h^{(l)(t-c)} + b^{(l+1)}) \right)\\
+		&= \left((\delta^{(l)(t-c+1)})^T \frac{\partial}{\partial z^{(l)(t-c)}} (H^{(l)} f(z^{(l)(t-c)}))\right) +\\
+		&\left( (\delta^{(l+1)(t-c)})^T \frac{\partial}{\partial z^{(l)(t-c)}}(W^{(l+1)} f(z^{(l)(t-c)}))\right)\\
+		&= (\delta^{(l)(t-c+1)})^T H^{(l)} diag[f'(z^{(l)(t-c)})] + 
+		(\delta^{(l+1)(t-c)})^T W^{(l+1)} diag[f'(z^{(l)(t-c)})] \\
+		&= ((\delta^{(l)(t-c+1)})^T H^{(l)} + 
+		(\delta^{(l+1)(t-c)})^T W^{(l+1)}) diag[f'(z^{(l)(t-c)})]  
 	\end{aligned}
 	\end{equation}
 	
 	\begin{equation}
 	\begin{aligned}
 		\delta^{(l)(t-c)} &= \nabla_{z^{(l)(t-c)}} J^{(t)} \\
-		&= diag[f'(z^{(l)(t-c)})] \cdot ((H^{(l)})^T \cdot \delta^{(l)(t-c+1)} + W^{(l+1)} \cdot (\delta^{(l+1)(t-c)})^T)
+		&= diag[f'(z^{(l)(t-c)})] ((H^{(l)})^T \delta^{(l)(t-c+1)} + W^{(l+1)} (\delta^{(l+1)(t-c)})^T)
 	\end{aligned}
 	\end{equation}
 	
 	\subsection{Gradients of Parameters}
-	\begin{equation}
-	\begin{aligned}
-		\frac{\partial J^{(t)}}{\partial U} 
-		&= \frac{\partial J^{(t)}}{\partial z^{(n)(t)}} 
-		\frac{\partial z^{(n)(t)}}{\partial U} \\
-		&= (\delta^{(n)(t)})^T \cdot \left[\frac{\partial z^{(n)(t)}_i}{\partial U}\right]\\
-		&= (\delta^{(n)(t)})^T \cdot \left[\frac{\partial }{\partial U} ((\epsilon_i)^T \cdot U \cdot h^{(n-1)(t)} + c_i)\right]\\
-		&= (\delta^{(n)(t)})^T \cdot \left[h^{(n-1)(t)} \cdot (\epsilon_i)^T\right]\\	
-		&= h^{(n-1)(t)} \cdot (\delta^{(n)(t)})^T
-	\end{aligned}
-	\end{equation}
 	
-	\begin{equation}
-	\begin{aligned}
-		\nabla_U J^{(t)} &= \delta^{(n)(t)} \cdot (h^{(n-1)(t)})^T\\
-	\end{aligned}
-	\end{equation}
-	
-	\begin{equation}
-	\begin{aligned}
-		\frac{\partial J^{(t)}}{\partial c} &= \frac{\partial J^{(t)}}{\partial z^{(n)(t)}} 
-		\frac{\partial z^{(n)(t)}}{\partial c} \\
-		&= (\delta^{(n)(t)})^T \cdot I \\
-		&= (\delta^{(n)(t)})^T 
-	\end{aligned}
-	\end{equation}
-	
-	\begin{equation}
-	\begin{aligned}
-		\nabla_{c} J^{(t)} &= \delta^{(n)(t)} 
-	\end{aligned}
-	\end{equation}
-	
+	\paragraph{$H$ -- horizontally propagation matrix}
 	\begin{equation}
 	\begin{aligned}
 		\frac{\partial J^{(t)}}{\partial H^{(l)}} 
@@ -197,16 +166,35 @@
 		\frac{\partial J^{(t)}}{\partial z^{(l)(k)}} 
 		\frac {\partial z^{(l)(k)}}{\partial H^{(l)}}\bigg|_{(k)} \\
 		&= \sum_{k=1}^{t}
-		(\delta^{(l)(k)})^T \cdot \left[\frac{\partial }{\partial H^{(l)}} (\epsilon_i)^T (H^{(l)} \cdot h^{(l)(k-1)} +  W^{(l)} \cdot h^{(l-1)(k)} + b^{(l)})\right] \\
+		(\delta^{(l)(k)})^T \left[\frac{\partial }{\partial H^{(l)}} (\epsilon_i)^T (H^{(l)} h^{(l)(k-1)} +  W^{(l)} h^{(l-1)(k)} + b^{(l)})\right] \\
 		&= \sum_{k=1}^{t}
-		(\delta^{(l)(k)})^T \cdot \left[h^{(l)(k-1)} \cdot (\epsilon_i)^T\right]\\	
-		&= \sum_{k=1}^{t} h^{(l)(k-1)} \cdot (\delta^{(l)(k)})^T
+		(\delta^{(l)(k)})^T \left[h^{(l)(k-1)} (\epsilon_i)^T\right]\\	
+		&= \sum_{k=1}^{t} h^{(l)(k-1)} (\delta^{(l)(k)})^T
 	\end{aligned}
 	\end{equation}
 	
 	\begin{equation}
 	\begin{aligned}
-		\nabla_{H^{(l)}} J^{(t)} &= \sum_{k=1}^{t} \delta^{(1)(k)} \cdot  (h^{(l)(k-1)})^T
+		\nabla_{H^{(l)}} J^{(t)} &= \sum_{k=1}^{t} \delta^{(1)(k)}  (h^{(l)(k-1)})^T
+	\end{aligned}
+	\end{equation}
+	
+	\paragraph{$W$ -- vertically propagation matrix}
+	\begin{equation}
+	\begin{aligned}
+	\frac{\partial J^{(t)}}{\partial W^{(n)}} 
+	&= \frac{\partial J^{(t)}}{\partial z^{(n)(t)}} 
+	\frac{\partial z^{(n)(t)}}{\partial W^{(n)}} \\
+	&= (\delta^{(n)(t)})^T \left[\frac{\partial z^{(n)(t)}_i}{\partial W^{(n)}}\right]\\
+	&= (\delta^{(n)(t)})^T \left[\frac{\partial }{\partial W^{(n)}} ((\epsilon_i)^T  W^{(n)} h^{(n-1)(t)} + b^{(n)}_i)\right]\\
+	&= (\delta^{(n)(t)})^T \left[h^{(n-1)(t)} (\epsilon_i)^T\right]\\	
+	&= h^{(n-1)(t)} (\delta^{(n)(t)})^T
+	\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+	\begin{aligned}
+	\nabla_{W^{(n)}} J^{(t)} &= \delta^{(n)(t)} (h^{(n-1)(t)})^T\\
 	\end{aligned}
 	\end{equation}
 	
@@ -217,19 +205,35 @@
 		\frac{\partial J^{(t)}}{\partial z^{(l)(k)}} 
 		\frac{\partial z^{(l)(k)}}{\partial W^{(l)}}\bigg|_{(k)} \\
 		&= \sum_{k=1}^{t}
-		(\delta^{(l)(k)})^T \cdot \left[\frac{\partial }{\partial W^{(l)}}(\epsilon_i)^T (H^{(l)} \cdot h^{(l)(k-1)} + W^{(l)} \cdot h^{(l-1)(k)} + b^{(l)})\right] \\
+		(\delta^{(l)(k)})^T \left[\frac{\partial }{\partial W^{(l)}}(\epsilon_i)^T (H^{(l)} h^{(l)(k-1)} + W^{(l)} h^{(l-1)(k)} + b^{(l)})\right] \\
 		&= \sum_{k=1}^{t}
-		(\delta^{(l)(k)})^T \cdot \left[h^{(l-1)(k)} \cdot (\epsilon_i)^T\right]\\	
-		&= \sum_{k=1}^{t} h^{(l-1)(k)} \cdot (\delta^{(l)(k)})^T
+		(\delta^{(l)(k)})^T \left[h^{(l-1)(k)} (\epsilon_i)^T\right]\\	
+		&= \sum_{k=1}^{t} h^{(l-1)(k)} (\delta^{(l)(k)})^T
 	\end{aligned}
 	\end{equation}
 	
 	\begin{equation}
 	\begin{aligned}
-		\nabla_{W^{(l)}} J^{(t)} &= \sum_{k=1}^{t} \delta^{(l)(k)} \cdot  (h^{(l-1)(k)})^T
+		\nabla_{W^{(l)}} J^{(t)} &= \sum_{k=1}^{t} \delta^{(l)(k)}  (h^{(l-1)(k)})^T
 	\end{aligned}
 	\end{equation}	
 		
+	\paragraph{b -- bias term}
+	\begin{equation}
+	\begin{aligned}
+	\frac{\partial J^{(t)}}{\partial b^{(n)}} &= \frac{\partial J^{(t)}}{\partial z^{(n)(t)}} 
+	\frac{\partial z^{(n)(t)}}{\partial b^{(n)}} \\
+	&= (\delta^{(n)(t)})^T I \\
+	&= (\delta^{(n)(t)})^T 
+	\end{aligned}
+	\end{equation}
+	
+	\begin{equation}
+	\begin{aligned}
+	\nabla_{b^{(n)}} J^{(t)} &= \delta^{(n)(t)} 
+	\end{aligned}
+	\end{equation}
+	
 	\begin{equation}
 	\begin{aligned}
 		\frac{\partial J^{(t)}}{\partial b^{(l)}} &= \sum_{k=1}^{t} \frac{\partial J^{(t)}}{\partial b^{(l)}}\bigg|_{(k)}  \\
@@ -237,7 +241,7 @@
 		\frac{\partial J^{(t)}}{\partial z^{(l)(k)}} 
 		\frac{\partial z^{(l)(k)}}{\partial b^{(l)}}\bigg|_{(k)} \\
 		&= \sum_{k=1}^{t}
-		(\delta^{(l)(k)})^T \cdot I \\
+		(\delta^{(l)(k)})^T I \\
 		&= \sum_{k=1}^{t} (\delta^{(l)(k)})^T
 	\end{aligned}
 	\end{equation}
@@ -251,20 +255,20 @@
 	\subsection{Conclusion}
 	\begin{align}
 		\delta^{(n)(t)} &= \hat{y}^{(t)} - y^{(t)} \\
-		\delta^{(n-1)(t)} &= diag[f'(z^{(n-1)(t)})] \cdot U^T \cdot \delta^{(n)(t)} \\
-		\delta^{(n-1)(t-c)} &= diag[f'(z^{(n-1)(t-c)})] \cdot (H^{(n-1)})^T \cdot \delta^{(n-1)(t-c+1)} \\
-		\delta^{(l)(t)} &= diag[f'(z^{(l)(t)})] \cdot (W^{(l+1)})^T \cdot \delta^{(l+1)(t)} \\
-		\delta^{(l)(t-c)} &= diag[f'(z^{(l)(t-c)})] ((H^{(l)})^T \cdot \delta^{(l)(t-c+1)} + (W^{(l+1)})^T \cdot \delta^{(l+1)(t-c)}) \\
-		\nabla_{U} J^{(t)} &= \delta^{(n)(t)} \cdot (h^{(n-1)(t)})^T \\
-		\nabla_{c} J^{(t)} &= \delta^{(n)(t)} \\
-		\nabla_{H^{(l)}} J^{(t)} &= \sum_{k=1}^{t} \delta^{(l)(t)} \cdot (h^{(l)(k-1)})^T \\
-		\nabla_{W^{(l)}} J^{(t)} &= \sum_{k=1}^{t} \delta^{(l)(k)} \cdot (h^{(l-1)(k)})^T \\
+		\delta^{(n-1)(t)} &= diag[f'(z^{(n-1)(t)})] (W^{(n)})^T \delta^{(n)(t)} \\
+		\delta^{(n-1)(t-c)} &= diag[f'(z^{(n-1)(t-c)})] (H^{(n-1)})^T \delta^{(n-1)(t-c+1)} \\
+		\delta^{(l)(t)} &= diag[f'(z^{(l)(t)})] (W^{(l+1)})^T \delta^{(l+1)(t)} \\
+		\delta^{(l)(t-c)} &= diag[f'(z^{(l)(t-c)})] ((H^{(l)})^T \delta^{(l)(t-c+1)} + (W^{(l+1)})^T \delta^{(l+1)(t-c)}) \\
+		\nabla_{H^{(l)}} J^{(t)} &= \sum_{k=1}^{t} \delta^{(l)(t)} (h^{(l)(k-1)})^T \\
+		\nabla_{W^{(n)}} J^{(t)} &= \delta^{(n)(t)} (h^{(n-1)(t)})^T \\
+		\nabla_{W^{(l)}} J^{(t)} &= \sum_{k=1}^{t} \delta^{(l)(k)} (h^{(l-1)(k)})^T \\
+		\nabla_{b^{(n)}} J^{(t)} &= \delta^{(n)(t)} \\
 		\nabla_{b^{(l)}} J^{(t)} &= \sum_{k=1}^{t} \delta^{(l)(k)}
 	\end{align}
 	
 	\newpage
 	\section{Trick for Implementation}
-	Derivation above is made with respect to the loss function of a single time step, (i.e. $\nabla J^{(t)}$). When taking derivative of the final loss function $\nabla J$ with respect to $H^{(l)}$, $W^{(l)}$, and $b^{(l)}$, instead of calculate $\nabla J^{(t)}$ for every time step and sum them up at last, which is correct but inefficient, we backprop only once by keeping record of $\gamma^{(l)(t)}$, which is the accumulating sum of $\delta^{(l)(t)(i)}$ over range $t$ to $T$.\footnote{We will slightly change our notation here by adding one more superscript to $\delta$ so as to differentiate $\delta$ from different $J^{(t)}$, now $\delta^{(l)(t)(i)} = \nabla_{z^{(l)(t)}}J^{(i)}$.} \\\\
+	Derivation above is made with respect to the loss function of a single time step, (i.e. $\nabla J^{(t)}$). When taking derivative of the final loss function $\nabla J$ with respect to $H^{(l)}$, $W^{(l)}$, and $b^{(l)}$ for $l < n$, instead of calculate $\nabla J^{(t)}$ for every time step and sum them up at last, which is correct but inefficient, we backprop only once by keeping record of $\gamma^{(l)(t)}$, which is the accumulating sum of $\delta^{(l)(t)(i)}$ over range $t$ to $T$.\footnote{We will slightly change our notation here by adding one more superscript to $\delta$ so as to differentiate $\delta$ from different $J^{(t)}$, now $\delta^{(l)(t)(i)} = \nabla_{z^{(l)(t)}}J^{(i)}$.} \\\\
 	It is easy to find that, when $t = T-1$:\\
 	\begin{equation}
 	\begin{aligned}
@@ -278,10 +282,10 @@
 		\gamma^{(n-1)(t)} 
 		&= \sum_{i=t}^{T} \delta^{(n-1)(t)(i)} \\
 		&= \delta^{(n-1)(t)(t)} + \sum_{i=t+1}^{T} \delta^{(n-1)(t)(i)} \\
-		&= \delta^{(n-1)(t)(t)} + \sum_{i=t+1}^{T} diag[f'(z^{(n-1)(t)})] \cdot (H^{(n-1)})^T \cdot \delta^{(n-1)(t+1)(i)}\\
-		&= \delta^{(n-1)(t)(t)} + diag[f'(z^{(n-1)(t)})] \cdot (H^{(n-1)})^T \cdot \sum_{i=t+1}^{T} \delta^{(n-1)(t+1)(i)}\\
-		&= \delta^{(n-1)(t)(t)} + diag[f'(z^{(n-1)(t)})] \cdot (H^{(n-1)})^T \cdot \gamma^{(n-1)(t+1)} \\
-		&= \delta^{(n-1)(t)(t)} + f'(z^{(n-1)(t)})\circ ((H^{(n-1)})^T \cdot \gamma^{(n-1)(t+1)})
+		&= \delta^{(n-1)(t)(t)} + \sum_{i=t+1}^{T} diag[f'(z^{(n-1)(t)})] (H^{(n-1)})^T \delta^{(n-1)(t+1)(i)}\\
+		&= \delta^{(n-1)(t)(t)} + diag[f'(z^{(n-1)(t)})] (H^{(n-1)})^T \sum_{i=t+1}^{T} \delta^{(n-1)(t+1)(i)}\\
+		&= \delta^{(n-1)(t)(t)} + diag[f'(z^{(n-1)(t)})] (H^{(n-1)})^T \gamma^{(n-1)(t+1)} \\
+		&= \delta^{(n-1)(t)(t)} + f'(z^{(n-1)(t)})\circ ((H^{(n-1)})^T \gamma^{(n-1)(t+1)})
 	\end{aligned}
 	\end{equation}
 	
@@ -290,12 +294,12 @@
 	\begin{aligned}
 		\gamma^{(l)(t)} 
 		&= \sum_{i=t}^{T} \delta^{(l)(t)(i)} \\
-		&= \sum_{i=t}^{T} diag[f'(z^{(l)(t)})] ((H^{(l)})^T \cdot \delta^{(l)(t+1)(i)} + (W^{(l+1)})^T \cdot \delta^{(l+1)(t)(i)}) \\
+		&= \sum_{i=t}^{T} diag[f'(z^{(l)(t)})] ((H^{(l)})^T \delta^{(l)(t+1)(i)} + (W^{(l+1)})^T \delta^{(l+1)(t)(i)}) \\
 		&= \delta^{(l)(t)(t)} + \sum_{i=t+1}^{T} \delta^{(l)(t)(i)} \\
-		&= \delta^{(l)(t)(t)} + \sum_{i=t+1}^{T} diag[f'(z^{(l)(t)})] ((H^{(l)})^T \cdot \delta^{(l)(t+1)(i)} + (W^{(l+1)})^T \cdot \delta^{(l+1)(t)(i)}) \\
+		&= \delta^{(l)(t)(t)} + \sum_{i=t+1}^{T} diag[f'(z^{(l)(t)})] ((H^{(l)})^T \delta^{(l)(t+1)(i)} + (W^{(l+1)})^T \delta^{(l+1)(t)(i)}) \\
 		&= \delta^{(l)(t)(t)} + diag[f'(z^{(l)(t)})] \\
 		&\left( (H^{(l)})^T \left(\sum_{i=t+1}^{T} \delta^{(l)(t+1)(i)}\right) + (W^{(l+1)})^T \left(\sum_{i=t+1}^{T} \delta^{(l+1)(t)(i)}\right) \right) \\		
-		&= \delta^{(l)(t)(t)} + f'(z^{(l)(t)}) \circ ( (H^{(l)})^T \cdot \gamma^{(l)(t+1)} + (W^{(l+1)})^T (\gamma^{(l+1)(t)} - \delta^{(l+1)(t)(t)}))
+		&= \delta^{(l)(t)(t)} + f'(z^{(l)(t)}) \circ ( (H^{(l)})^T \gamma^{(l)(t+1)} + (W^{(l+1)})^T (\gamma^{(l+1)(t)} - \delta^{(l+1)(t)(t)}))
 	\end{aligned}
 	\end{equation}
 	
@@ -303,18 +307,18 @@
 	\begin{equation}
 	\begin{aligned}
 		\nabla_{H^{(l)}} J 
-		&= \frac{1}{T}\sum_{i=1}^{T} \sum_{j=1}^{i} \delta^{(l)(j)(i)} \cdot  (h^{(j-1)})^T\\
-		&= \frac{1}{T} \sum_{i=1}^{T} \sum_{j=i}^{T} \delta^{(l)(i)(j)} \cdot  (h^{(l)(i-1)})^T\\
-		&= \frac{1}{T} \sum_{i=1}^{T} \gamma^{(l)(i)} \cdot  (h^{(l)(i-1)})^T\\
+		&= \frac{1}{T}\sum_{i=1}^{T} \sum_{j=1}^{i} \delta^{(l)(j)(i)}  (h^{(j-1)})^T\\
+		&= \frac{1}{T} \sum_{i=1}^{T} \sum_{j=i}^{T} \delta^{(l)(i)(j)}  (h^{(l)(i-1)})^T\\
+		&= \frac{1}{T} \sum_{i=1}^{T} \gamma^{(l)(i)}  (h^{(l)(i-1)})^T\\
 	\end{aligned}
 	\end{equation}
 	
 	\begin{equation}
 	\begin{aligned}
 		\nabla_{W^{(l)}} J 
-		&= \frac{1}{T} \sum_{i=1}^{T} \sum_{j=1}^{i} \delta^{(l)(j)(i)} \cdot  (h^{(l-1)(j)})^T\\
-		&= \frac{1}{T} \sum_{i=1}^{T} \sum_{j=i}^{T} \delta^{(l)(i)(j)} \cdot  (h^{(l-1)(i)})^T\\
-		&= \frac{1}{T} \sum_{i=1}^{T} \gamma^{(l)(i)} \cdot  (h^{(l-1)(i)})^T\\
+		&= \frac{1}{T} \sum_{i=1}^{T} \sum_{j=1}^{i} \delta^{(l)(j)(i)}  (h^{(l-1)(j)})^T\\
+		&= \frac{1}{T} \sum_{i=1}^{T} \sum_{j=i}^{T} \delta^{(l)(i)(j)}  (h^{(l-1)(i)})^T\\
+		&= \frac{1}{T} \sum_{i=1}^{T} \gamma^{(l)(i)}  (h^{(l-1)(i)})^T\\
 	\end{aligned}
 	\end{equation}
 	
@@ -332,17 +336,16 @@
 		\delta^{(l)(t)(t)} &=
 		\begin{cases}
 			\hat{y}^{(t)} - y^{(t)} &l=n\\	
-			f'(z^{(l)(t)}) \circ (U^T \delta^{(l+1)(t)(t)}) &l=n-1\\
-			f'(z^{(l)(t)}) \circ ((W^{(l+1)})^T \delta^{(l+1)(t)(t)}) &l<n-1
+			f'(z^{(l)(t)}) \circ ((W^{(l+1)})^T \delta^{(l+1)(t)(t)}) &l<n
 		\end{cases} 
 		\\
-		\delta^{(l)(t-c)(t)} &=
-		\begin{cases}
-			f'(z^{(l)(t-c)}) \circ ((H^{(l)})^T \delta^{(l)(t-c+1)(t)}) &l=n-1 \\
-			f'(z^{(l)(t-c)}) \circ ((H^{(l)})^T \delta^{(l)(t-c+1)(t)} + \\
-			 (W^{(l+1)})^T \delta^{(l+1)(t-c)(t)}) &l<n-1
-		\end{cases} 
-		\\
+		%\delta^{(l)(t-c)(t)} &=
+		%\begin{cases}
+		%	f'(z^{(l)(t-c)}) \circ ((H^{(l)})^T \delta^{(l)(t-c+1)(t)}) &l=n-1 \\
+		%	f'(z^{(l)(t-c)}) \circ ((H^{(l)})^T \delta^{(l)(t-c+1)(t)} + \\
+		%	 (W^{(l+1)})^T \delta^{(l+1)(t-c)(t)}) &l<n-1
+		%\end{cases} 
+		%\\
 		\gamma^{(l)(t)} &= 
 		\begin{cases}
 		\delta^{(l)(t)(t)} &t=T
@@ -352,14 +355,19 @@
 		\delta^{(l)(t)(t)} + f'(z^{(l)(t)}) \circ ((H^{(l)})^T \gamma^{(l)(t+1)} + \\ (W^{(l+1)})^T (\gamma^{(l+1)(t)} - \delta^{(l+1)(t)(t)})) &l<n-1
 		\end{cases}
 		\\
-		\nabla_{U} J &= \frac{1}{T} \sum_{t=1}^{T}\delta^{(n)(t)(t)} (h^{(n-1)(t)})^T\\
-		\nabla_{c} J &= \frac{1}{T} \sum_{t=1}^{T}\delta^{(n)(t)(t)} 
-		\\
 		\nabla_{H^{(l)}} J &= \frac{1}{T} \sum_{t=1}^{T} \gamma^{(l)(t)} (h^{(l)(t-1)})^T
 		\\
-		\nabla_{W^{(l)}} J &= \frac{1}{T} \sum_{t=1}^{T} \gamma^{(l)(t)} (h^{(l-1)(t)})^T
+		\nabla_{W^{(l)}} J &= 
+		\begin{cases}
+		\frac{1}{T} \sum_{t=1}^{T}\delta^{(n)(t)(t)} (h^{(n-1)(t)})^T &l=n\\
+		\frac{1}{T} \sum_{t=1}^{T} \gamma^{(l)(t)} (h^{(l-1)(t)})^T &l<n
+		\end{cases}		
 		\\
-		\nabla_{b^{(l)}} J &= \frac{1}{T} \sum_{t=1}^{T} \gamma^{(l)(t)}
+		\nabla_{b^{(l)}} J &= 
+		\begin{cases}
+		\frac{1}{T} \sum_{t=1}^{T}\delta^{(n)(t)(t)} &l=n \\
+		\frac{1}{T} \sum_{t=1}^{T} \gamma^{(l)(t)} &l<n
+		\end{cases}
 	\end{align}
 	\end{framed}
 \end{document}
