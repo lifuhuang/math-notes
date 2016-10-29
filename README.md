@@ -1,2 +1,2 @@
-# Memo-of-Thoughts
-Talk is cheap, show me your thoughts.
+# messy-memo
+A messy collection of math derivations and notes written in .tex and .txt files. BEWARE: MIGHT BE HUMAN UNREADABLE.
