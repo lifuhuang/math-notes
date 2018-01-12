@@ -2,7 +2,6 @@
 
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{framed}
 
 \title{Derivation of (Deep) RNN}
 \author{Lifu Huang}
@@ -299,7 +298,8 @@
 		&= \delta^{(l)(t)(t)} + \sum_{i=t+1}^{T} diag[f'(z^{(l)(t)})] ((H^{(l)})^T \delta^{(l)(t+1)(i)} + (W^{(l+1)})^T \delta^{(l+1)(t)(i)}) \\
 		&= \delta^{(l)(t)(t)} + diag[f'(z^{(l)(t)})] \\
 		&\left( (H^{(l)})^T \left(\sum_{i=t+1}^{T} \delta^{(l)(t+1)(i)}\right) + (W^{(l+1)})^T \left(\sum_{i=t+1}^{T} \delta^{(l+1)(t)(i)}\right) \right) \\		
-		&= \delta^{(l)(t)(t)} + f'(z^{(l)(t)}) \circ ( (H^{(l)})^T \gamma^{(l)(t+1)} + (W^{(l+1)})^T (\gamma^{(l+1)(t)} - \delta^{(l+1)(t)(t)}))
+		&= \delta^{(l)(t)(t)} + f'(z^{(l)(t)}) \circ ( (H^{(l)})^T \gamma^{(l)(t+1)} + (W^{(l+1)})^T (\gamma^{(l+1)(t)} - \delta^{(l+1)(t)(t)})) \\
+		&= f'(z^{(l)(t)}) \circ ( (H^{(l)})^T \gamma^{(l)(t+1)} + (W^{(l+1)})^T \gamma^{(l+1)(t)})
 	\end{aligned}
 	\end{equation}
 	
@@ -330,8 +330,7 @@
 		&= \frac{1}{T} \sum_{i=1}^{T} \gamma^{(l)(i)} \\
 	\end{aligned}
 	\end{equation}
-	Mnn, putting every thing together,
-	\begin{framed}
+	Hmm, now we can put every thing together,
 	\begin{align}
 		\delta^{(l)(t)(t)} &=
 		\begin{cases}
@@ -352,7 +351,7 @@
 		\\
 		\delta^{(l)(t)(t)} + f'(z^{(l)(t)}) \circ ((H^{(l)})^T \gamma^{(l)(t+1)}) &l=n-1
 		\\
-		\delta^{(l)(t)(t)} + f'(z^{(l)(t)}) \circ ((H^{(l)})^T \gamma^{(l)(t+1)} + \\ (W^{(l+1)})^T (\gamma^{(l+1)(t)} - \delta^{(l+1)(t)(t)})) &l<n-1
+		f'(z^{(l)(t)}) \circ ((H^{(l)})^T \gamma^{(l)(t+1)} + \\ (W^{(l+1)})^T \gamma^{(l+1)(t)}) &l<n-1
 		\end{cases}
 		\\
 		\nabla_{H^{(l)}} J &= \frac{1}{T} \sum_{t=1}^{T} \gamma^{(l)(t)} (h^{(l)(t-1)})^T
@@ -369,5 +368,4 @@
 		\frac{1}{T} \sum_{t=1}^{T} \gamma^{(l)(t)} &l<n
 		\end{cases}
 	\end{align}
-	\end{framed}
 \end{document}
